@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agustín González — Soporte Administrativo & Técnico Remoto</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--cream:#F9F7F4;--ink:#1A1A18;--mid:#7A7870;--accent:#C8A96E;--line:#E4E0D8;--max:1100px;--pad:60px}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;font-size:15px;line-height:1.7;overflow-x:hidden}
+
+#cursor{width:8px;height:8px;background:var(--accent);border-radius:50%;position:fixed;top:-20px;left:-20px;pointer-events:none;z-index:9999}
+#cursor-ring{width:32px;height:32px;border:1px solid var(--accent);border-radius:50%;position:fixed;top:-20px;left:-20px;pointer-events:none;z-index:9998;opacity:.5}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(249,247,244,.93);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .3s}
+nav.scrolled{border-color:var(--line)}
+.nav-inner{max-width:var(--max);margin:0 auto;padding:26px var(--pad);display:flex;justify-content:space-between;align-items:center}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;letter-spacing:.04em;color:var(--ink);text-decoration:none}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+
+.hero{min-height:100vh;display:flex;align-items:center;padding-top:88px}
+.hero-inner{max-width:var(--max);margin:0 auto;padding:60px var(--pad);width:100%;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:80px}
+.hero-left{animation:fadeUp .9s ease .2s both}
+.hero-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:24px}
+.hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(48px,5.5vw,80px);font-weight:300;line-height:1.0;margin-bottom:28px}
+.hero-name em{font-style:italic;color:var(--accent)}
+.hero-desc{color:var(--mid);font-size:15px;max-width:400px;margin-bottom:44px;line-height:1.8}
+.btn-group{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.btn-primary{display:inline-block;padding:13px 28px;background:var(--ink);color:var(--cream);font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:background .2s}
+.btn-primary:hover{background:var(--accent)}
+.btn-whatsapp{display:inline-block;padding:13px 28px;background:var(--ink);color:var(--cream);font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:background .2s}
+.btn-whatsapp:hover{background:var(--accent)}
+.btn-secondary{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px;transition:color .2s,border-color .2s}
+.btn-secondary:hover{color:var(--ink);border-color:var(--ink)}
+
+.hero-right{animation:fadeUp .9s ease .45s both}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.stat-row:first-child{border-top:1px solid var(--line)}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300}
+.stat-meta{text-align:right}
+.stat-label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);display:block}
+.stat-sub{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-top:3px;display:block}
+
+section{padding:100px 0}
+.section-inner{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.section-header{display:flex;align-items:baseline;gap:24px;margin-bottom:64px}
+.section-num{font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--accent);letter-spacing:.1em}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,3.5vw,48px);font-weight:300}
+.section-line{flex:1;height:1px;background:var(--line)}
+
+/* REVEAL — fade + slide suave, bidireccional */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.reveal.show{opacity:1;transform:translateY(0)}
+
+/* EXPERIENCIA */
+.exp-item{display:grid;grid-template-columns:200px 1fr;gap:40px;padding:40px 0;border-bottom:1px solid var(--line)}
+.exp-period{font-size:12px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+.exp-company{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;line-height:1.2}
+.exp-role{font-size:12px;color:var(--mid);margin-top:4px;letter-spacing:.05em}
+.exp-content p{color:var(--mid);font-size:14px;line-height:1.8}
+.exp-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.tag{font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border:1px solid var(--line);color:var(--mid)}
+
+/* HERRAMIENTAS — iconos monocromáticos dorados */
+.tools-section{background:var(--ink)}
+.tools-section .section-title{color:var(--cream)}
+.tools-section .section-num{color:var(--accent)}
+.tools-section .section-line{background:rgba(255,255,255,.15)}
+.tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.06)}
+.tool-card{background:var(--ink);padding:32px 28px;transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1),background .25s,border-left-color .25s;border-left:3px solid transparent;cursor:default}
+.tool-card:hover{background:#1e1e1c;border-left-color:var(--accent)}
+.tool-card:hover .tool-name{color:var(--accent)}
+.tool-icon{margin-bottom:16px;line-height:1}
+.tool-icon svg{display:block}
+.tool-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:300;color:var(--cream);margin-bottom:6px;transition:color .25s}
+.tool-desc{font-size:12px;color:rgba(249,247,244,.38);line-height:1.6}
+
+/* CERTIFICACIONES */
+.cert-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.cert-card{border:1px solid var(--line);padding:36px;position:relative;overflow:hidden;transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1),border-color .3s}
+.cert-card:hover{border-color:var(--accent)}
+.cert-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent)}
+.cert-score{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;line-height:1;margin-bottom:8px}
+.cert-score span{font-size:24px;color:var(--accent)}
+.cert-name{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);margin-bottom:4px}
+.cert-detail{font-size:12px;color:var(--mid);opacity:.6}
+.cert-badge{display:inline-block;margin-top:16px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--accent);color:var(--accent)}
+.cert-card-visual{border:1px solid var(--line);overflow:hidden;transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1),border-color .3s}
+.cert-card-visual:hover{border-color:var(--accent)}
+.cert-visual-header{height:90px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:white;letter-spacing:.02em}
+.cert-canva-bg{background:linear-gradient(135deg,#00C4B4,#7B2FBE)}
+.cert-wp-bg{background:linear-gradient(135deg,#21759B,#0073AA)}
+.cert-visual-body{padding:28px 32px 32px;position:relative}
+.cert-visual-body::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent)}
+.cert-credential{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);opacity:.5;margin-top:8px}
+
+/* IDIOMAS */
+.lang-row{display:flex;align-items:center;gap:32px;padding:28px 0;border-bottom:1px solid var(--line)}
+.lang-name{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;width:200px}
+.lang-level{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);width:180px}
+.lang-bar{flex:1;height:1px;background:var(--line);position:relative}
+.lang-fill{position:absolute;top:0;left:0;height:1px;background:var(--accent);width:0;transition:width 1.2s ease}
+
+/* CONTACTO */
+.contact-section{background:var(--ink);padding:120px 0;text-align:center}
+.contact-inner{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.contact-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,5.5vw,72px);font-weight:300;margin-bottom:20px;line-height:1.1;color:var(--cream)}
+.contact-title em{font-style:italic;color:var(--accent)}
+.contact-sub{color:rgba(249,247,244,.45);font-size:14px;margin-bottom:56px;letter-spacing:.04em}
+.contact-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.08);max-width:780px;margin:0 auto}
+.contact-card{background:var(--ink);padding:32px 20px;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:12px;transition:background .2s}
+.contact-card:hover{background:#252520}
+.contact-card:hover .contact-card-label{color:var(--accent)}
+.contact-card-icon{font-size:20px}
+.contact-card-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(249,247,244,.55);transition:color .2s}
+
+footer{border-top:1px solid var(--line)}
+.footer-inner{max-width:var(--max);margin:0 auto;padding:24px var(--pad);display:flex;justify-content:space-between;align-items:center}
+footer p{font-size:11px;color:var(--mid);letter-spacing:.06em}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:960px){
+  :root{--pad:28px}
+  .nav-links{display:none}
+  .hero-inner{grid-template-columns:1fr;gap:48px;padding-top:40px;padding-bottom:60px}
+  .hero{min-height:auto}
+  section{padding:72px 0}
+  .exp-item{grid-template-columns:1fr;gap:16px}
+  .tools-grid{grid-template-columns:repeat(2,1fr)}
+  .cert-grid{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:repeat(2,1fr)}
+  .contact-section{padding:80px 0}
+  .lang-name{width:120px;font-size:24px}
+  .lang-level{width:140px}
+  .footer-inner{flex-direction:column;gap:8px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">AG</a>
+    <ul class="nav-links">
+      <li><a href="#experiencia">Experiencia</a></li>
+      <li><a href="#herramientas">Herramientas</a></li>
+      <li><a href="#certificaciones">Certificaciones</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Portfolio — Soporte Administrativo & Técnico Remoto</p>
+      <h1 class="hero-name">Agustín<br><em>González</em></h1>
+      <p class="hero-desc">Asistente virtual y soporte administrativo con más de 8 años de experiencia en operaciones, e-commerce y atención al cliente multicanal.</p>
+      <div class="btn-group">
+        <a href="mailto:gonzalez.sergioagust@gmail.com" class="btn-primary">Contactar</a>
+        <a href="https://wa.me/5491156091265" target="_blank" class="btn-whatsapp">WhatsApp</a>
+        <a href="https://linkedin.com/in/sergioagustingonzalez" target="_blank" class="btn-secondary">LinkedIn →</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="stat-row"><span class="stat-num">8+</span><div class="stat-meta"><span class="stat-label">Años de experiencia</span></div></div>
+      <div class="stat-row"><span class="stat-num">4</span><div class="stat-meta"><span class="stat-label">Empresas</span><span class="stat-sub">incl. co-founder</span></div></div>
+      <div class="stat-row"><span class="stat-num">3</span><div class="stat-meta"><span class="stat-label">Idiomas</span></div></div>
+      <div class="stat-row"><span class="stat-num">10+</span><div class="stat-meta"><span class="stat-label">Herramientas digitales</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="experiencia">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Experiencia</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">2025 — Hoy</div>
+        <div class="exp-company">Notebooks Pro</div>
+        <div class="exp-role">Encargado de Stock & Operaciones E-Commerce</div>
+      </div>
+      <div class="exp-content">
+        <p>Gestión integral de inventario: control, conteo y conciliación de stock en Airtable y Google Sheets. Alta y configuración de productos en WordPress, incluyendo upgrades y gestión de devoluciones. Diseño de flujo de gestión de cambios vía Slack, adoptado formalmente por la dirección.</p>
+        <div class="exp-tags"><span class="tag">Airtable</span><span class="tag">WordPress</span><span class="tag">Google Sheets</span><span class="tag">E-Commerce</span><span class="tag">Slack</span></div>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">2021 — 2025</div>
+        <div class="exp-company">Roma Service</div>
+        <div class="exp-role">Co-fundador & Responsable Operativo</div>
+      </div>
+      <div class="exp-content">
+        <p>Desarrollo del emprendimiento desde cero: naming, identidad visual y estrategia comercial. Gestión de campañas en Google Ads y Meta Ads. Coordinación operativa: pedidos, seguimiento de trabajos, facturación y gestión general del servicio.</p>
+        <div class="exp-tags"><span class="tag">Google Ads</span><span class="tag">Meta Ads</span><span class="tag">Canva</span><span class="tag">Gestión operativa</span></div>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">2019 — 2021</div>
+        <div class="exp-company">Moni Préstamos Online</div>
+        <div class="exp-role">Customer Support & Backoffice</div>
+      </div>
+      <div class="exp-content">
+        <p>Atención y resolución de consultas vía chat y email con comunicación escrita clara y profesional. Backoffice y CRM: validación de identidad y datos de usuarios mediante Zendesk.</p>
+        <div class="exp-tags"><span class="tag">Zendesk</span><span class="tag">CRM</span><span class="tag">Atención al cliente</span><span class="tag">Backoffice</span></div>
+      </div>
+    </div>
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">2017 — 2019</div>
+        <div class="exp-company">Rekios</div>
+        <div class="exp-role">Asistente Administrativo</div>
+      </div>
+      <div class="exp-content">
+        <p>Centro de rehabilitación kinésica y osteopática. Administración general, organización de agenda y coordinación operativa. Admisión y recepción de pacientes, confección de fichas y seguimiento de historial. Gestión de cobros, obras sociales y documentación.</p>
+        <div class="exp-tags"><span class="tag">Microsoft Office</span><span class="tag">Administración</span><span class="tag">Gestión de agenda</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="herramientas" class="tools-section">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Herramientas</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="tools-grid">
+
+      <div class="tool-card reveal">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="6" fill="rgba(200,169,110,0.12)"/>
+            <path d="M15.1 8.2l-7.8 3.2c-.5.2-.5.9 0 1.1l7.8 3.2c.6.2 1.2.2 1.8 0l7.8-3.2c.5-.2.5-.9 0-1.1l-7.8-3.2a2 2 0 00-1.8 0z" fill="var(--accent)"/>
+            <path d="M17 17.8v7c0 .5.5.8 1 .6l8.5-3.9c.3-.1.5-.4.5-.7V13c0-.5-.5-.8-1-.6L17.5 17c-.3.1-.5.4-.5.8z" fill="var(--accent)" opacity=".55"/>
+            <path d="M14.6 17.9l-8.1-3.4c-.4-.2-.9.1-.9.6v7c0 .3.2.6.5.7l8 3.3c.5.2 1-.1 1-.7v-7c0-.3-.2-.5-.5-.5z" fill="var(--accent)" opacity=".3"/>
+          </svg>
+        </div>
+        <div class="tool-name">Airtable</div>
+        <div class="tool-desc">Gestión de inventario y bases de datos relacionales</div>
+      </div>
+
+      <div class="tool-card reveal">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="6" fill="rgba(200,169,110,0.12)"/>
+            <circle cx="16" cy="16" r="10" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+            <path d="M7 16a9 9 0 0115-6.7L7.8 23A9 9 0 017 16zm10.5 9l5.5-16A9 9 0 0125 16a9 9 0 01-6.5 8.6l-1 .4zm-2.5-.1C9.5 24.2 7 20.4 7 16l.1-.3 6.3 17.3c.5.1 1 .2 1.6.1 0 0-.1-.1 0-.1z" fill="var(--accent)" opacity=".7"/>
+          </svg>
+        </div>
+        <div class="tool-name">WordPress</div>
+        <div class="tool-desc">Alta de productos, configuración y gestión de contenidos</div>
+      </div>
+
+      <div class="tool-card reveal">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="6" fill="rgba(200,169,110,0.12)"/>
+            <rect x="8" y="5" width="16" height="22" rx="2" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+            <path d="M20 5l6 6h-6V5z" fill="var(--accent)" opacity=".4"/>
+            <rect x="11" y="14" width="10" height="1.2" rx=".6" fill="var(--accent)" opacity=".9"/>
+            <rect x="11" y="17.5" width="10" height="1.2" rx=".6" fill="var(--accent)" opacity=".6"/>
+            <rect x="11" y="21" width="7" height="1.2" rx=".6" fill="var(--accent)" opacity=".4"/>
+          </svg>
+        </div>
+        <div class="tool-name">Google Sheets</div>
+        <div class="tool-desc">Reportes, seguimiento de stock y análisis de datos</div>
+      </div>
+
+      <div class="tool-card reveal">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="6" fill="rgba(200,169,110,0.12)"/>
+            <path d="M16 8c-3.3 0-6 2.2-6 4.8v.7h12v-.7C22 10.2 19.3 8 16 8z" fill="var(--accent)"/>
+            <rect x="10" y="13.5" width="12" height="10.5" rx="1" fill="var(--accent)" opacity=".4"/>
+            <path d="M22 13.2c0-2.7-2.7-4.8-6-4.8S10 10.5 10 13.2h12z" fill="var(--accent)" opacity=".7"/>
+          </svg>
+        </div>
+        <div class="tool-name">Zendesk</div>
+        <div class="tool-desc">CRM y gestión de tickets de soporte al cliente</div>
+      </div>
+
+      <div class="tool-card reveal">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="6" fill="rgba(200,169,110,0.12)"/>
+            <rect x="6" y="6" width="8.5" height="8.5" rx="2" fill="var(--accent)"/>
+            <rect x="17.5" y="6" width="8.5" height="8.5" rx="2" fill="var(--accent)" opacity=".65"/>
+            <rect x="6" y="17.5" width="8.5" height="8.5" rx="2" fill="var(--accent)" opacity=".65"/>
+            <rect x="17.5" y="17.5" width="8.5" height="8.5" rx="2" fill="var(--accent)" opacity=".35"/>
+          </svg>
+        </div>
+        <div class="tool-name">Slack</div>
+        <div class="tool-desc">Comunicación interna y gestión de procesos</div>
+      </div>
+
+      <div class="tool-card reveal">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="6" fill="rgba(200,169,110,0.12)"/>
+            <rect x="7" y="7" width="18" height="18" rx="2.5" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity=".4"/>
+            <rect x="11" y="13" width="10" height="1.2" rx=".6" fill="var(--accent)" opacity=".9"/>
+            <rect x="11" y="16.5" width="7" height="1.2" rx=".6" fill="var(--accent)" opacity=".6"/>
+            <rect x="11" y="10" width="5" height="1.8" rx=".9" fill="var(--accent)"/>
+          </svg>
+        </div>
+        <div class="tool-name">Notion</div>
+        <div class="tool-desc">Documentación, wikis y gestión de proyectos</div>
+      </div>
+
+      <div class="tool-card reveal">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="16" fill="rgba(200,169,110,0.12)"/>
+            <text x="8" y="22" font-family="Georgia,serif" font-weight="700" font-size="17" fill="var(--accent)">C</text>
+            <circle cx="23" cy="10" r="4.5" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+            <circle cx="23" cy="10" r="2" fill="var(--accent)" opacity=".5"/>
+          </svg>
+        </div>
+        <div class="tool-name">Canva</div>
+        <div class="tool-desc">Diseño de materiales visuales y contenido digital</div>
+      </div>
+
+      <div class="tool-card reveal">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="6" fill="rgba(200,169,110,0.12)"/>
+            <circle cx="16" cy="16" r="9" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity=".5"/>
+            <circle cx="16" cy="16" r="4" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+            <line x1="7" y1="16" x2="25" y2="16" stroke="var(--accent)" stroke-width="1.2" opacity=".4"/>
+            <line x1="16" y1="7" x2="16" y2="25" stroke="var(--accent)" stroke-width="1.2" opacity=".4"/>
+          </svg>
+        </div>
+        <div class="tool-name">Google Workspace</div>
+        <div class="tool-desc">Gmail, Drive, Docs, Meet — entorno colaborativo</div>
+      </div>
+
+      <div class="tool-card reveal">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="6" fill="rgba(200,169,110,0.12)"/>
+            <path d="M16 8l2.5 5 5.5.8-4 3.9 1 5.5-5-2.6-5 2.6 1-5.5-4-3.9 5.5-.8z" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M16 10.5l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4-2.9-2.8 4-.6z" fill="var(--accent)" opacity=".25"/>
+          </svg>
+        </div>
+        <div class="tool-name">Meta & Google Ads</div>
+        <div class="tool-desc">Gestión de campañas publicitarias digitales</div>
+      </div>
+
+      <div class="tool-card reveal">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="6" fill="rgba(200,169,110,0.12)"/>
+            <rect x="6" y="9" width="20" height="14" rx="2" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity=".5"/>
+            <rect x="9" y="13.5" width="14" height="1.2" rx=".6" fill="var(--accent)" opacity=".9"/>
+            <rect x="9" y="17" width="10" height="1.2" rx=".6" fill="var(--accent)" opacity=".6"/>
+            <rect x="9" y="11" width="4" height="1.2" rx=".6" fill="var(--accent)" opacity=".5"/>
+          </svg>
+        </div>
+        <div class="tool-name">Microsoft Office</div>
+        <div class="tool-desc">Excel, Word, Outlook — nivel intermedio certificado</div>
+      </div>
+
+      <div class="tool-card reveal">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="6" fill="rgba(200,169,110,0.12)"/>
+            <rect x="4" y="8" width="24" height="14" rx="2" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity=".45"/>
+            <path d="M13 12.5l6 3.5-6 3.5V12.5z" fill="var(--accent)" opacity=".8"/>
+            <rect x="13" y="24" width="6" height="2" rx="1" fill="var(--accent)" opacity=".5"/>
+            <rect x="11" y="26" width="10" height="1.2" rx=".6" fill="var(--accent)" opacity=".4"/>
+          </svg>
+        </div>
+        <div class="tool-name">TeamViewer</div>
+        <div class="tool-desc">Soporte técnico remoto</div>
+      </div>
+
+      <div class="tool-card reveal">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="16" fill="rgba(200,169,110,0.12)"/>
+            <path d="M9.5 22l3.8-11h1.4l3.5 9.5 2.8-9.5h1.4l-3.5 11h-1.3l-1.8-5L14 22h-1.4l-3.1-8.4V22H9.5zm8-10.2l-1.4 3.8h3l-1.6-3.8z" fill="var(--accent)"/>
+          </svg>
+        </div>
+        <div class="tool-name">Claude AI</div>
+        <div class="tool-desc">Redacción, automatización de tareas y optimización de procesos</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="certificaciones">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Certificaciones</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="cert-grid">
+      <div class="cert-card reveal">
+        <div class="cert-score">83<span>%</span></div>
+        <div class="cert-name">Microsoft Excel Intermedio</div>
+        <div class="cert-detail">Workana · 2026 · Percentil 71</div>
+        <div class="cert-badge">✓ Certificado</div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-score">83<span>%</span></div>
+        <div class="cert-name">Computer Skills Intermedio</div>
+        <div class="cert-detail">Workana · 2024 · Percentil 50</div>
+        <div class="cert-badge">✓ Certificado</div>
+      </div>
+      <div class="cert-card-visual reveal">
+        <div class="cert-visual-header cert-canva-bg">Canva Certified</div>
+        <div class="cert-visual-body">
+          <div class="cert-name">Canva Essentials</div>
+          <div class="cert-detail" style="margin-top:8px;line-height:1.7;">Navegación avanzada, personalización de plantillas, edición fotográfica, tipografía y flujos de colaboración digital.</div>
+          <div class="cert-credential">Canva Design School · Oct 2024 · ID: 0d674f</div>
+          <div class="cert-badge">✓ Certificado</div>
+        </div>
+      </div>
+      <div class="cert-card-visual reveal">
+        <div class="cert-visual-header cert-wp-bg">WordPress</div>
+        <div class="cert-visual-body">
+          <div class="cert-name">Construye un Sitio Web con WordPress</div>
+          <div class="cert-detail" style="margin-top:8px;line-height:1.7;">Desarrollo y configuración de sitios web profesionales. Proyecto práctico verificado e implementado.</div>
+          <div class="cert-credential">Coursera · Oct 2024 · ID: XOZR2JA09FSJ</div>
+          <div class="cert-badge">✓ Certificado</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="idiomas">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Idiomas</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="lang-row reveal" data-w="100">
+      <div class="lang-name">Español</div>
+      <div class="lang-level">Nativo</div>
+      <div class="lang-bar"><div class="lang-fill"></div></div>
+    </div>
+    <div class="lang-row reveal" data-w="55">
+      <div class="lang-name">Inglés</div>
+      <div class="lang-level">B1 — Intermedio</div>
+      <div class="lang-bar"><div class="lang-fill"></div></div>
+    </div>
+    <div class="lang-row reveal" data-w="30">
+      <div class="lang-name">Portugués</div>
+      <div class="lang-level">Básico</div>
+      <div class="lang-bar"><div class="lang-fill"></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="contacto" class="contact-section">
+  <div class="contact-inner">
+    <h2 class="contact-title reveal">¿Trabajamos<br><em>juntos?</em></h2>
+    <p class="contact-sub reveal">Disponible para proyectos remotos de tiempo completo o part-time.</p>
+    <div class="contact-grid reveal">
+      <a href="mailto:gonzalez.sergioagust@gmail.com" class="contact-card">
+        <span class="contact-card-icon">✉️</span>
+        <span class="contact-card-label">Email</span>
+      </a>
+      <a href="https://wa.me/5491156091265" target="_blank" class="contact-card">
+        <span class="contact-card-icon">💬</span>
+        <span class="contact-card-label">WhatsApp</span>
+      </a>
+      <a href="https://linkedin.com/in/sergioagustingonzalez" target="_blank" class="contact-card">
+        <span class="contact-card-icon">💼</span>
+        <span class="contact-card-label">LinkedIn</span>
+      </a>
+      <a href="https://www.workana.com/freelancer/f3f62f6967e112c4988cea7ceec37080" target="_blank" class="contact-card">
+        <span class="contact-card-icon">🌐</span>
+        <span class="contact-card-label">Workana</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <p>© 2026 Sergio Agustín González</p>
+    <p>Buenos Aires, Argentina</p>
+  </div>
+</footer>
+
+<script>
+// Cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=(mx-4)+'px';
+  cursor.style.top=(my-4)+'px';
+});
+(function anim(){
+  rx+=(mx-rx)*.1; ry+=(my-ry)*.1;
+  ring.style.left=(rx-16)+'px';
+  ring.style.top=(ry-16)+'px';
+  requestAnimationFrame(anim);
+})();
+
+// Nav
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>40);
+});
+
+// Reveal — sin delays, sin stagger, todo en tiempo real
+function checkReveal(){
+  const vh = window.innerHeight;
+  document.querySelectorAll('.reveal').forEach(el=>{
+    const top = el.getBoundingClientRect().top;
+    if(top < vh - 60){
+      el.classList.add('show');
+      const fill = el.querySelector('.lang-fill');
+      if(fill) fill.style.width = el.getAttribute('data-w')+'%';
+    } else {
+      el.classList.remove('show');
+      const fill = el.querySelector('.lang-fill');
+      if(fill) fill.style.width = '0%';
+    }
+  });
+}
+window.addEventListener('scroll', checkReveal, {passive:true});
+window.addEventListener('resize', checkReveal, {passive:true});
+checkReveal();
+</script>
+</body>
+</html>
